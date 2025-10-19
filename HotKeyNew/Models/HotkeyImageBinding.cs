@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotKeyNew.Models
 {
-    class HotkeyImageBinding
+    public class HotkeyImageBinding
     {
         public string KeyName { get; set; } //F1 F2 F3 ...
         public ImageItem AssignedImage { get; set; }

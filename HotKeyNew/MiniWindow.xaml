@@ -5,8 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotKeyNew"
         mc:Ignorable="d"
-        Title="MiniWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="이미지 선택" Height="280" Width="760"
+        WindowStyle="ToolWindow" ResizeMode="NoResize"
+        Topmost="True" ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen"
+        KeyDown="Window_KeyDown"
+        Loaded="Window_Loaded">
+
+    <!-- 테두리 및 배경 -->
+    <Border Background="#F0F0F0" BorderBrush="#888" BorderThickness="2" CornerRadius="8">
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- 안내 문구 -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                <TextBlock Text="F1~F12 키를 눌러 이미지를 클립보드에 복사하세요"
+                           FontSize="14" FontWeight="Bold"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="ESC: 취소"
+                           FontSize="11" Foreground="Gray"
+                           HorizontalAlignment="Center" Margin="0,5,0,0"/>
+            </StackPanel>
+
+            <!-- F1~F12 이미지 그리드 (2행 6열) -->
+            <ItemsControl Grid.Row="1" Name="HotkeyItemsControl">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="2" Columns="6"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#CCC" BorderThickness="1" 
+                                Background="White" CornerRadius="5" Margin="5">
+                            <StackPanel Margin="5">
+                                <!-- F키 이름 (F1, F2, ...) -->
+                                <TextBlock Text="{Binding KeyName}" 
+                                           FontWeight="Bold" FontSize="14"
+                                           HorizontalAlignment="Center"/>
+
+                                <!-- 할당된 이미지 썸네일 -->
+                                <Image Source="{Binding AssignedImage.ImageSource}" 
+                                       Width="80" Height="80" 
+                                       Stretch="Uniform" Margin="5"/>
+
+                                <!-- 파일명 -->
+                                <TextBlock Text="{Binding ImageName}" 
+                                           FontSize="9" TextTrimming="CharacterEllipsis"
+                                           HorizontalAlignment="Center"
+                                           Foreground="Gray"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Border>
 </Window>

@@ -1,24 +1,23 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using HotKeyNew.Models;
 using Microsoft.Win32;
+using HotKeyNew.Services;
+using System.Windows.Interop;
+using System;
 
 namespace HotKeyNew
 {
     public partial class MainWindow : Window
     {
         //전역변수에는 _를 붙이는것이 코드관리에 좋은듯 하다..? 검색필요
-        ObservableCollection<ImageItem> _images = new ObservableCollection<ImageItem>(); 
-        ObservableCollection<HotkeyImageBinding> _hotkeys = new ObservableCollection<HotkeyImageBinding>();
+        //private 필드는 _로 시작하는것이 일반적
+        //-> private로 변경
+        private ObservableCollection<ImageItem> _images = new ObservableCollection<ImageItem>(); 
+        private ObservableCollection<HotkeyImageBinding> _hotkeys = new ObservableCollection<HotkeyImageBinding>();
         public MainWindow()
         {
             InitializeComponent();

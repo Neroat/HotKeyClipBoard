@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace HotKeyNew.Models
 {
-    class ImageItem
+    public class ImageItem
     {
         public string FilePath { get; set; }
         public string FileName { get; set; }
