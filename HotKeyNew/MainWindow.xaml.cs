@@ -8,6 +8,8 @@ using Microsoft.Win32;
 using HotKeyNew.Services;
 using System.Windows.Interop;
 using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace HotKeyNew
 {
@@ -19,6 +21,18 @@ namespace HotKeyNew
         private ObservableCollection<ImageItem> _images = new ObservableCollection<ImageItem>(); 
         private ObservableCollection<HotkeyImageBinding> _hotkeys = new ObservableCollection<HotkeyImageBinding>();
         private HotKeyManager _hotkeyManager;
+
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out MOUSE_POINT lpPoint);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MOUSE_POINT
+        {
+            public int X;
+            public int Y;
+        }
+
+        private bool _isRealClose = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -137,10 +151,65 @@ namespace HotKeyNew
         {
             Dispatcher.Invoke(() =>
             {
-                var miniWindow = new MiniWindow(_hotkeys);
-                miniWindow.Owner = this;
-                miniWindow.ShowDialog();
+                ShowMiniWindow();
             });
+        }
+
+        private void ShowMiniWindow()
+        {
+            var miniWindow = new MiniWindow(_hotkeys);
+            GetCursorPos(out MOUSE_POINT mousePoint);
+            var screen = System.Windows.Forms.Screen.FromPoint
+                (new System.Drawing.Point(mousePoint.X, mousePoint.Y));
+            miniWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+            miniWindow.Left = (double)screen.WorkingArea.Left + (screen.WorkingArea.Width - miniWindow.Width) / 2;
+            miniWindow.Top = (double)screen.WorkingArea.Top + (screen.WorkingArea.Height - miniWindow.Height) / 2;
+            miniWindow.Owner = this;
+            miniWindow.ShowDialog();
+        }
+
+        //트레이로 숨김
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (!_isRealClose)
+            {
+                e.Cancel = true;  // 닫기 취소
+                this.Hide();
+                TrayIcon.Visibility = Visibility.Visible;
+
+                // 우측 하단 Toast? 알림
+                TrayIcon.ShowBalloonTip("Image Hotkey",
+                    "트레이로 최소화되었습니다.\nAlt+Shift+I는 계속 사용 가능합니다.",
+                    Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            }
+        }
+
+        //창 복원
+        private void TrayIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            ShowMainWindow();
+        }
+
+        // 트레이메뉴 - 열기
+        private void TrayOpen_Click(object sender, RoutedEventArgs e)
+        {
+            ShowMainWindow();
+        }
+
+        // 트레이메뉴 - 종료
+        private void TrayExit_Click(object sender, RoutedEventArgs e)
+        {
+            _isRealClose = true;
+            Application.Current.Shutdown();
+        }
+
+        // 트레이창 복원
+        private void ShowMainWindow()
+        {
+            this.Show();
+            this.WindowState = WindowState.Normal;
+            this.Activate();
+            TrayIcon.Visibility = Visibility.Collapsed;
         }
     }
 }

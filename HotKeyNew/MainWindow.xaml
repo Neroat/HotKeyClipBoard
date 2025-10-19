@@ -4,16 +4,54 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotKeyNew"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         Title="Image Hotkey Clipboard" Height="600" Width="1000"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing">
 
+    <Window.Resources>
+        <!-- 트레이 아이콘 우클릭 메뉴 -->
+        <ContextMenu x:Key="TrayMenu">
+            <MenuItem Header="열기" Click="TrayOpen_Click" FontWeight="Bold"/>
+            <Separator/>
+            <MenuItem Header="종료" Click="TrayExit_Click"/>
+        </ContextMenu>
+    </Window.Resources>
+    
+
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <!-- 트레이 아이콘 (처음엔 숨김) -->
+        <tb:TaskbarIcon x:Name="TrayIcon"
+                        ToolTipText="Image Hotkey Clipboard (Alt+Shift+I)"
+                        ContextMenu="{StaticResource TrayMenu}"
+                        TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick"
+                        Visibility="Collapsed">
+            <tb:TaskbarIcon.IconSource>
+                <DrawingImage>
+                    <DrawingImage.Drawing>
+                        <DrawingGroup>
+                            <GeometryDrawing Brush="#FF4CAF50">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry Center="8,8" RadiusX="7" RadiusY="7"/>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                            <GeometryDrawing Brush="White">
+                                <GeometryDrawing.Geometry>
+                                    <RectangleGeometry Rect="5,7,6,2"/>
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingImage.Drawing>
+                </DrawingImage>
+            </tb:TaskbarIcon.IconSource>
+        </tb:TaskbarIcon>
 
         <!-- 상단 컨트롤 패널 -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Background="#F5F5F5">
@@ -46,7 +84,7 @@
                                 <StackPanel>
                                     <Image Source="{Binding ImageSource}" 
                                            Width="120" Height="120" 
-                                           Stretch="UniformToFill"/>
+                                           Stretch="Fill"/>
                                     <TextBlock Text="{Binding FileName}" 
                                                HorizontalAlignment="Center" 
                                                Margin="5" FontSize="10"
@@ -97,7 +135,7 @@
                 <TextBlock Name="StatusText" Text="준비됨"/>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Text=" Alt+Shift+I: 등록한 이미지 목록"/>
+                <TextBlock Text="Alt+Shift+I: 이미지 목록"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

@@ -25,6 +25,7 @@ namespace HotKeyNew
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            this.Activate();
             this.Focus();  // 창에 포커스 = 키 입력 가능
         }
 
