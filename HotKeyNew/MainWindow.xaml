@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Title="Image Hotkey Clipboard" Height="600" Width="1000"
         WindowStartupLocation="CenterScreen"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Background="#F8F9FA">
 
     <Window.Resources>
         <!-- 트레이 아이콘 우클릭 메뉴 -->
@@ -17,17 +18,105 @@
             <Separator/>
             <MenuItem Header="종료" Click="TrayExit_Click"/>
         </ContextMenu>
-    </Window.Resources>
-    
 
-    
+        <!-- 모던 버튼 스타일 -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#5E35B1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#5E35B1" Opacity="0.3" 
+                                                BlurRadius="10" ShadowDepth="2"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#7E57C2"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#4527A0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 작은 버튼 스타일 -->
+        <Style x:Key="SmallButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF5252"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF7043"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 이미지 카드 할당 버튼 스타일 -->
+        <Style x:Key="AssignButton" TargetType="Button">
+            <Setter Property="Background" Value="#00BFA5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1DE9B6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!-- 트레이 아이콘 (처음엔 숨김) -->
+
+        <!-- 트레이 아이콘 -->
         <tb:TaskbarIcon x:Name="TrayIcon"
                         ToolTipText="Image Hotkey Clipboard (Alt+Shift+I)"
                         ContextMenu="{StaticResource TrayMenu}"
@@ -37,7 +126,7 @@
                 <DrawingImage>
                     <DrawingImage.Drawing>
                         <DrawingGroup>
-                            <GeometryDrawing Brush="#FF4CAF50">
+                            <GeometryDrawing Brush="#FF5E35B1">
                                 <GeometryDrawing.Geometry>
                                     <EllipseGeometry Center="8,8" RadiusX="7" RadiusY="7"/>
                                 </GeometryDrawing.Geometry>
@@ -53,90 +142,174 @@
             </tb:TaskbarIcon.IconSource>
         </tb:TaskbarIcon>
 
-        <!-- 상단 컨트롤 패널 -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Background="#F5F5F5">
-            <Button Name="SelectFolderButton" Content="폴더 선택" 
-                    Width="100" Height="30" Margin="5"
-                    Click="SelectFolderButton_Click"/>
-            <TextBlock Name="SelectedFolderText" Text="폴더를 선택해주세요" 
-                       VerticalAlignment="Center" Margin="10,0"/>
-        </StackPanel>
+        <!-- 상단 헤더 영역 -->
+        <Border Grid.Row="0" Background="White" 
+                BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" Opacity="0.1" 
+                                BlurRadius="8" ShadowDepth="2" Direction="270"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal" Margin="20,15">
+                <Button Name="SelectFolderButton" Content="📁 폴더 선택" 
+                        Width="120" Height="38"
+                        Style="{StaticResource ModernButton}"
+                        Click="SelectFolderButton_Click"/>
+                <TextBlock Name="SelectedFolderText" Text="폴더를 선택해주세요" 
+                           VerticalAlignment="Center" Margin="20,0"
+                           FontSize="13" Foreground="#424242"/>
+            </StackPanel>
+        </Border>
 
         <!-- 메인 콘텐츠 영역 -->
-        <Grid Grid.Row="1" Margin="10">
+        <Grid Grid.Row="1" Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!-- 이미지 미리보기 영역 -->
-            <ScrollViewer Grid.Column="0" Margin="0,0,10,0">
-                <ItemsControl Name="ImagePreviewItemsControl">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="4"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" 
-                                    Background="White" CornerRadius="5">
-                                <StackPanel>
-                                    <Image Source="{Binding ImageSource}" 
-                                           Width="120" Height="120" 
-                                           Stretch="Fill"/>
-                                    <TextBlock Text="{Binding FileName}" 
-                                               HorizontalAlignment="Center" 
-                                               Margin="5" FontSize="10"
-                                               TextWrapping="Wrap"/>
-                                    <Button Content="F키 할당" 
-                                            Width="100" Height="25" Margin="5"
-                                            Click="AssignHotkeyButton_Click"
-                                            Tag="{Binding}"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-
-            <!-- F키 할당 영역 -->
-            <GroupBox Grid.Column="1" Header="F키 할당" FontWeight="Bold">
-                <ScrollViewer>
-                    <ItemsControl Name="HotkeyAssignmentItemsControl">
+            <Border Grid.Column="0" Margin="0,0,15,0" 
+                    Background="White" CornerRadius="10"
+                    BorderBrush="#E0E0E0" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" Opacity="0.08" 
+                                    BlurRadius="10" ShadowDepth="3"/>
+                </Border.Effect>
+                <ScrollViewer Margin="10">
+                    <ItemsControl Name="ImagePreviewItemsControl">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="4"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" Text="{Binding KeyName}" 
-                                               Width="40" VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding ImageName}" 
-                                               VerticalAlignment="Center" Margin="5,0"
-                                               TextTrimming="CharacterEllipsis"/>
-                                    <Button Grid.Column="2" Content="제거" Width="40" Height="25"
-                                            Click="RemoveHotkeyButton_Click"
-                                            Tag="{Binding}"/>
-                                </Grid>
+                                <Border BorderBrush="#E0E0E0" BorderThickness="1" 
+                                        Margin="8" Background="White" CornerRadius="8"
+                                        Padding="8">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect Color="#000000" Opacity="0.1" 
+                                                                    BlurRadius="8" ShadowDepth="2"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="BorderBrush" Value="#7E57C2"/>
+                                                    <Setter Property="BorderThickness" Value="2"/>
+                                                    <Setter Property="Effect">
+                                                        <Setter.Value>
+                                                            <DropShadowEffect Color="#5E35B1" Opacity="0.3" 
+                                                                            BlurRadius="15" ShadowDepth="3"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <StackPanel>
+                                        <Border Background="#F5F5F5" CornerRadius="6" 
+                                                Padding="5" Margin="0,0,0,8">
+                                            <Image Source="{Binding ImageSource}" 
+                                                   Width="120" Height="120" 
+                                                   Stretch="Uniform"/>
+                                        </Border>
+                                        <TextBlock Text="{Binding FileName}" 
+                                                   HorizontalAlignment="Center" 
+                                                   Margin="0,0,0,8" FontSize="10"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="#616161"
+                                                   MaxWidth="120"/>
+                                        <Button Content="F키 할당" 
+                                                Width="100" Height="28"
+                                                Style="{StaticResource AssignButton}"
+                                                Click="AssignHotkeyButton_Click"
+                                                Tag="{Binding}"/>
+                                    </StackPanel>
+                                </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-            </GroupBox>
+            </Border>
+
+            <!-- F키 할당 영역 -->
+            <Border Grid.Column="1" Background="White" 
+                    CornerRadius="10" BorderBrush="#E0E0E0" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" Opacity="0.08" 
+                                    BlurRadius="10" ShadowDepth="3"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 헤더 -->
+                    <Border Grid.Row="0" Background="#5E35B1" 
+                            CornerRadius="10,10,0,0" Padding="15,12">
+                        <TextBlock Text="⌨️ F키 할당" FontWeight="Bold" 
+                                   FontSize="14" Foreground="White"/>
+                    </Border>
+
+                    <!-- 할당 목록 -->
+                    <ScrollViewer Grid.Row="1" Margin="10">
+                        <ItemsControl Name="HotkeyAssignmentItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5" Background="#F8F9FA" 
+                                            CornerRadius="6" Padding="10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border Grid.Column="0" Background="#5E35B1" 
+                                                    CornerRadius="4" Padding="8,4" Margin="0,0,8,0">
+                                                <TextBlock Text="{Binding KeyName}" 
+                                                           FontWeight="Bold" FontSize="11"
+                                                           Foreground="White"/>
+                                            </Border>
+
+                                            <TextBlock Grid.Column="1" Text="{Binding ImageName}" 
+                                                       VerticalAlignment="Center"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       FontSize="11" Foreground="#424242"/>
+
+                                            <Button Grid.Column="2" Content="✕" 
+                                                    Width="28" Height="28"
+                                                    Style="{StaticResource SmallButton}"
+                                                    Click="RemoveHotkeyButton_Click"
+                                                    Tag="{Binding}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
         </Grid>
 
         <!-- 하단 상태바 -->
-        <StatusBar Grid.Row="2" Background="#E0E0E0">
-            <StatusBarItem>
-                <TextBlock Name="StatusText" Text="준비됨"/>
-            </StatusBarItem>
-            <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Text="Alt+Shift+I: 이미지 목록"/>
-            </StatusBarItem>
-        </StatusBar>
+        <Border Grid.Row="2" Background="White" 
+                BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+            <Grid Margin="20,10">
+                <TextBlock Name="StatusText" Text="✓ 준비됨" 
+                           VerticalAlignment="Center"
+                           FontSize="12" Foreground="#424242"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Border Background="#EDE7F6" CornerRadius="4" Padding="10,5">
+                        <TextBlock Text="⌨️ Alt+Shift+I : 이미지 목록" 
+                                   FontSize="11" Foreground="#5E35B1" FontWeight="SemiBold"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

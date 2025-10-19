@@ -1,44 +1,145 @@
 ﻿<Window x:Class="HotKeyNew.HotkeySelectionDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="F키 선택" Height="300" Width="400"
+        Title="F키 선택" Height="360" Width="480"
         WindowStartupLocation="CenterOwner"
-        WindowStyle="ToolWindow"
+        WindowStyle="None" AllowsTransparency="True"
+        Background="Transparent"
         ResizeMode="NoResize">
-    <Grid Margin="15">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <!-- 안내 문구 -->
-        <TextBlock Grid.Row="0" 
-                   Text="할당할 F키를 선택하세요"
-                   FontSize="14" FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,15"/>
+    <Window.Resources>
+        <!-- F키 버튼 스타일 -->
+        <Style x:Key="FKeyButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#5E35B1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#000000" Opacity="0.08" 
+                                                BlurRadius="8" ShadowDepth="2"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5E35B1"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="#5E35B1"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#4527A0"/>
+                                <Setter Property="BorderBrush" Value="#4527A0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-        <!-- F1~F12 버튼 그리드 -->
-        <UniformGrid Grid.Row="1" Rows="3" Columns="4" 
-                     HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="F1" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="0"/>
-            <Button Content="F2" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="1"/>
-            <Button Content="F3" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="2"/>
-            <Button Content="F4" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="3"/>
-            <Button Content="F5" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="4"/>
-            <Button Content="F6" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="5"/>
-            <Button Content="F7" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="6"/>
-            <Button Content="F8" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="7"/>
-            <Button Content="F9" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="8"/>
-            <Button Content="F10" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="9"/>
-            <Button Content="F11" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="10"/>
-            <Button Content="F12" Width="80" Height="50" Margin="5" Click="FKeyButton_Click" Tag="11"/>
-        </UniformGrid>
+        <!-- 취소 버튼 스타일 -->
+        <Style x:Key="CancelButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="Foreground" Value="#757575"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="20,10">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E0E0E0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-        <!-- 취소 버튼 -->
-        <Button Grid.Row="2" Content="취소" Width="100" Height="30"
-                HorizontalAlignment="Center" Margin="0,15,0,0"
-                Click="CancelButton_Click"/>
-    </Grid>
+    <Border Background="White" BorderBrush="#5E35B1" 
+            BorderThickness="2" CornerRadius="12" Margin="8">
+        <Border.Effect>
+            <DropShadowEffect Color="#5E35B1" Opacity="0.3" 
+                            BlurRadius="20" ShadowDepth="5"/>
+        </Border.Effect>
+
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- 헤더 -->
+            <Border Grid.Row="0" Background="#5E35B1" 
+                    CornerRadius="8" Padding="15,12" Margin="0,0,0,20">
+                <TextBlock Text="⌨️ 할당할 F키를 선택하세요"
+                           FontSize="15" FontWeight="Bold"
+                           Foreground="White"
+                           HorizontalAlignment="Center"/>
+            </Border>
+
+            <!-- F1~F12 버튼 그리드 -->
+            <UniformGrid Grid.Row="1" Rows="3" Columns="4" Margin="0,0,0,15">
+                <Button Content="F1" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="0"/>
+                <Button Content="F2" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="1"/>
+                <Button Content="F3" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="2"/>
+                <Button Content="F4" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="3"/>
+                <Button Content="F5" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="4"/>
+                <Button Content="F6" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="5"/>
+                <Button Content="F7" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="6"/>
+                <Button Content="F8" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="7"/>
+                <Button Content="F9" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="8"/>
+                <Button Content="F10" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="9"/>
+                <Button Content="F11" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="10"/>
+                <Button Content="F12" Width="95" Height="Auto" Margin="5" 
+                        Style="{StaticResource FKeyButtonStyle}"
+                        Click="FKeyButton_Click" Tag="11"/>
+            </UniformGrid>
+
+            <!-- 취소 버튼 -->
+            <Button Grid.Row="2" Content="취소" Width="120" Height="38"
+                    Style="{StaticResource CancelButtonStyle}"
+                    HorizontalAlignment="Center"
+                    Click="CancelButton_Click"/>
+        </Grid>
+    </Border>
 </Window>

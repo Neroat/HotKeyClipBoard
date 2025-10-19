@@ -51,7 +51,7 @@ namespace HotKeyNew
         {
             //폴더에서 이미지 불러오는 로직 작성
             _images.Clear();
-            var imageExtensions = new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif" };
+            var imageExtensions = new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp" };
             var files = Directory.GetFiles(folderPath)
                 .Where(f => imageExtensions.Contains(Path.GetExtension(f).ToLower()));
 

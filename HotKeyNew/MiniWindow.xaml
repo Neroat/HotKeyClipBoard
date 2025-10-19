@@ -5,29 +5,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotKeyNew"
         mc:Ignorable="d"
-        Title="이미지 선택" Height="380" Width="850"
-        WindowStyle="ToolWindow" ResizeMode="NoResize"
+        Title="이미지 선택" Height="400" Width="900"
+        WindowStyle="None" AllowsTransparency="True"
+        Background="Transparent" ResizeMode="NoResize"
         Topmost="True" ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen"
         KeyDown="Window_KeyDown"
         Loaded="Window_Loaded">
 
-    <Border Background="#F0F0F0" BorderBrush="#888" BorderThickness="2" CornerRadius="8">
-        <Grid Margin="15">
+    <Border Background="White" BorderBrush="#5E35B1" 
+            BorderThickness="2" CornerRadius="15" Margin="10">
+        <Border.Effect>
+            <DropShadowEffect Color="#5E35B1" Opacity="0.4" 
+                            BlurRadius="20" ShadowDepth="5"/>
+        </Border.Effect>
+
+        <Grid Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- 안내 문구 -->
-            <StackPanel Grid.Row="0" Margin="0,0,0,10">
-                <TextBlock Text="F1~F12 키를 눌러 이미지를 클립보드에 복사하세요"
-                           FontSize="14" FontWeight="Bold"
-                           HorizontalAlignment="Center"/>
-                <TextBlock Text="ESC: 취소"
-                           FontSize="11" Foreground="Gray"
-                           HorizontalAlignment="Center" Margin="0,5,0,0"/>
-            </StackPanel>
+            <!-- 헤더 영역 -->
+            <Border Grid.Row="0" Background="#5E35B1" 
+                    CornerRadius="8" Padding="15,10" Margin="0,0,0,15">
+                <StackPanel>
+                    <TextBlock Text="⌨️ 이미지 빠른 선택"
+                               FontSize="16" FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="F1~F12 키를 눌러 이미지를 클립보드에 복사하세요  •  ESC: 취소"
+                               FontSize="11" Foreground="#E1BEE7"
+                               HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
 
             <!-- F1~F12 이미지 그리드 -->
             <ItemsControl Grid.Row="1" Name="HotkeyItemsControl">
@@ -38,21 +49,48 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="#CCC" BorderThickness="1" 
-                                Background="White" CornerRadius="5" Margin="5">
-                            <StackPanel Margin="5">
-                                <!-- F키 이름 -->
-                                <TextBlock Text="{Binding KeyName}" 
-                                           FontWeight="Bold" FontSize="14"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,2,0,3"/>
+                        <Border BorderBrush="#E0E0E0" BorderThickness="1.5" 
+                                Background="White" CornerRadius="8" Margin="6" 
+                                Padding="8">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect Color="#000000" Opacity="0.08" 
+                                                            BlurRadius="8" ShadowDepth="2"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="BorderBrush" Value="#7E57C2"/>
+                                            <Setter Property="BorderThickness" Value="2"/>
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect Color="#5E35B1" Opacity="0.3" 
+                                                                    BlurRadius="15" ShadowDepth="3"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
 
-                                <!-- 이미지 영역 (충분히 크게) -->
+                            <StackPanel>
+                                <!-- F키 배지 -->
+                                <Border Background="#5E35B1" CornerRadius="4" 
+                                        Padding="8,4" Margin="0,0,0,6"
+                                        HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding KeyName}" 
+                                               FontWeight="Bold" FontSize="13"
+                                               Foreground="White"/>
+                                </Border>
+
+                                <!-- 이미지 영역 -->
                                 <Border Width="115" Height="115" 
-                                        Background="#F5F5F5" 
-                                        CornerRadius="3">
+                                        Background="#F8F9FA" 
+                                        CornerRadius="6" Margin="0,0,0,6">
                                     <Image Source="{Binding AssignedImage.ImageSource}" 
-                                           Stretch="Uniform"/>
+                                           Stretch="Uniform" Margin="5"/>
                                 </Border>
 
                                 <!-- 파일명 -->
@@ -60,9 +98,8 @@
                                            FontSize="9" 
                                            TextTrimming="CharacterEllipsis"
                                            HorizontalAlignment="Center"
-                                           Foreground="Gray"
-                                           MaxWidth="115"
-                                           Margin="0,3,0,0"/>
+                                           Foreground="#757575"
+                                           MaxWidth="115"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
