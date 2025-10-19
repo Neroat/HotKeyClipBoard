@@ -5,14 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotKeyNew"
         mc:Ignorable="d"
-        Title="이미지 선택" Height="280" Width="760"
+        Title="이미지 선택" Height="380" Width="850"
         WindowStyle="ToolWindow" ResizeMode="NoResize"
         Topmost="True" ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen"
         KeyDown="Window_KeyDown"
         Loaded="Window_Loaded">
 
-    <!-- 테두리 및 배경 -->
     <Border Background="#F0F0F0" BorderBrush="#888" BorderThickness="2" CornerRadius="8">
         <Grid Margin="15">
             <Grid.RowDefinitions>
@@ -30,7 +29,7 @@
                            HorizontalAlignment="Center" Margin="0,5,0,0"/>
             </StackPanel>
 
-            <!-- F1~F12 이미지 그리드 (2행 6열) -->
+            <!-- F1~F12 이미지 그리드 -->
             <ItemsControl Grid.Row="1" Name="HotkeyItemsControl">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -42,21 +41,28 @@
                         <Border BorderBrush="#CCC" BorderThickness="1" 
                                 Background="White" CornerRadius="5" Margin="5">
                             <StackPanel Margin="5">
-                                <!-- F키 이름 (F1, F2, ...) -->
+                                <!-- F키 이름 -->
                                 <TextBlock Text="{Binding KeyName}" 
                                            FontWeight="Bold" FontSize="14"
-                                           HorizontalAlignment="Center"/>
+                                           HorizontalAlignment="Center"
+                                           Margin="0,2,0,3"/>
 
-                                <!-- 할당된 이미지 썸네일 -->
-                                <Image Source="{Binding AssignedImage.ImageSource}" 
-                                       Width="80" Height="80" 
-                                       Stretch="Uniform" Margin="5"/>
+                                <!-- 이미지 영역 (충분히 크게) -->
+                                <Border Width="115" Height="115" 
+                                        Background="#F5F5F5" 
+                                        CornerRadius="3">
+                                    <Image Source="{Binding AssignedImage.ImageSource}" 
+                                           Stretch="Uniform"/>
+                                </Border>
 
                                 <!-- 파일명 -->
                                 <TextBlock Text="{Binding ImageName}" 
-                                           FontSize="9" TextTrimming="CharacterEllipsis"
+                                           FontSize="9" 
+                                           TextTrimming="CharacterEllipsis"
                                            HorizontalAlignment="Center"
-                                           Foreground="Gray"/>
+                                           Foreground="Gray"
+                                           MaxWidth="115"
+                                           Margin="0,3,0,0"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

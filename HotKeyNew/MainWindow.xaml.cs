@@ -18,6 +18,7 @@ namespace HotKeyNew
         //-> private로 변경
         private ObservableCollection<ImageItem> _images = new ObservableCollection<ImageItem>(); 
         private ObservableCollection<HotkeyImageBinding> _hotkeys = new ObservableCollection<HotkeyImageBinding>();
+        private HotKeyManager _hotkeyManager;
         public MainWindow()
         {
             InitializeComponent();
@@ -28,6 +29,8 @@ namespace HotKeyNew
                 _hotkeys.Add(new HotkeyImageBinding { KeyName = "F" + i });
                 
             }
+            _hotkeyManager = new HotKeyManager();
+            _hotkeyManager.HotKeyPressed += OnGlobalHotkeyPressed;
         }
 
         private void LoadImagesFromFolder(string folderPath)
@@ -110,6 +113,34 @@ namespace HotKeyNew
                     StatusText.Text = $"{selectedImage.FileName}이(가) {targetSlot.KeyName}에 할당되었습니다.";
                 }
             }
+        }
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            var helper = new WindowInteropHelper(this);
+            if (!_hotkeyManager.Register(helper.Handle))
+            {
+                MessageBox.Show("단축키 등록에 실패했습니다. \n다른프로그램이 사용 중일 수 있습니다.", 
+                    "오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                StatusText.Text = "글로벌 단축키가 등록되었습니다. (Alt + Shift + I)";
+            }
+        }
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            _hotkeyManager?.Unregister();
+        }
+        private void OnGlobalHotkeyPressed(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                var miniWindow = new MiniWindow(_hotkeys);
+                miniWindow.Owner = this;
+                miniWindow.ShowDialog();
+            });
         }
     }
 }
