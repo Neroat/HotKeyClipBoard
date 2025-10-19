@@ -5,8 +5,100 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HotKeyNew"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Image Hotkey Clipboard" Height="600" Width="1000"
+        WindowStartupLocation="CenterScreen">
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 상단 컨트롤 패널 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Background="#F5F5F5">
+            <Button Name="SelectFolderButton" Content="폴더 선택" 
+                    Width="100" Height="30" Margin="5"
+                    Click="SelectFolderButton_Click"/>
+            <TextBlock Name="SelectedFolderText" Text="폴더를 선택해주세요" 
+                       VerticalAlignment="Center" Margin="10,0"/>
+        </StackPanel>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 이미지 미리보기 영역 -->
+            <ScrollViewer Grid.Column="0" Margin="0,0,10,0">
+                <ItemsControl Name="ImagePreviewItemsControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="4"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="Gray" BorderThickness="1" Margin="5" 
+                                    Background="White" CornerRadius="5">
+                                <StackPanel>
+                                    <Image Source="{Binding ImageSource}" 
+                                           Width="120" Height="120" 
+                                           Stretch="UniformToFill"/>
+                                    <TextBlock Text="{Binding FileName}" 
+                                               HorizontalAlignment="Center" 
+                                               Margin="5" FontSize="10"
+                                               TextWrapping="Wrap"/>
+                                    <Button Content="F키 할당" 
+                                            Width="100" Height="25" Margin="5"
+                                            Click="AssignHotkeyButton_Click"
+                                            Tag="{Binding}"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- F키 할당 영역 -->
+            <GroupBox Grid.Column="1" Header="F키 할당" FontWeight="Bold">
+                <ScrollViewer>
+                    <ItemsControl Name="HotkeyAssignmentItemsControl">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="{Binding KeyName}" 
+                                               Width="40" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding ImageName}" 
+                                               VerticalAlignment="Center" Margin="5,0"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <Button Grid.Column="2" Content="제거" Width="40" Height="25"
+                                            Click="RemoveHotkeyButton_Click"
+                                            Tag="{Binding}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </GroupBox>
+        </Grid>
+
+        <!-- 하단 상태바 -->
+        <StatusBar Grid.Row="2" Background="#E0E0E0">
+            <StatusBarItem>
+                <TextBlock Name="StatusText" Text="준비됨"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text=" Alt+Shift+I: 등록한 이미지 목록"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
