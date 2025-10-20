@@ -45,6 +45,14 @@ namespace HotKeyNew
             }
             _hotkeyManager = new HotKeyManager();
             _hotkeyManager.HotKeyPressed += OnGlobalHotkeyPressed;
+            var lastPath = Properties.Settings.Default.LastFolderPath;
+
+            //json 파일 저장을 할까 하다가, 간단한 설정은 Settings.settings에 저장하는것이 더 편할듯 하여 변경
+            if (Directory.Exists(lastPath))
+            {
+                SelectedFolderText.Text = lastPath;
+                LoadImagesFromFolder(lastPath);
+            }
         }
 
         private void LoadImagesFromFolder(string folderPath)
@@ -82,6 +90,8 @@ namespace HotKeyNew
                 string folderPath = dialog.FolderName;
                 SelectedFolderText.Text = folderPath;
                 LoadImagesFromFolder(folderPath);
+                Properties.Settings.Default.LastFolderPath = folderPath;
+                Properties.Settings.Default.Save();
             }
 
         }
